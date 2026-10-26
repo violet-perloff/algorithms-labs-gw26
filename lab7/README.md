@@ -84,9 +84,9 @@ occurs. Record where $j$ stops and whether you add $s$ to the results.
 | Shift `s` | Text indices checked | Final `j` | Append `s`? |
 |---|---|---|---|
 | 1 | `1` | 0 | No |
-| 2 | TODO | TODO | TODO |
-| 4 | TODO | TODO | TODO |
-| 5 | TODO | TODO | TODO |
+| 2 | `2` | 1 | No |
+| 4 | `1` | 0 | No |
+| 5 | `3` | 2 | Yes |
 
 ### 1.2 Implementation
 

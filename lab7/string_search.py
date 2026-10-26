@@ -12,10 +12,23 @@ def naive_search(text, pattern):
     matches = []
 
     # TODO 1.2: compare characters at each shift and collect complete matches
+    for s in range (n - m + 1):
+        j = 0
+        while j < m and text[s + j] == pattern[j]:
+            j = j + 1
+            if j == m : 
+                matches.append(s)
+    return matches
     raise NotImplementedError("Complete naive_search")
 
     return matches
 
+def MATCHES (text, pattern, s) :
+    m = len(pattern)
+    for i in range (m):
+        if (text[s + i] != pattern[i]):
+            return False
+    return True
 
 def rabin_karp(text, pattern, d=256, q=101):
     """Return all matching starting indices using a rolling hash.
@@ -30,6 +43,17 @@ def rabin_karp(text, pattern, d=256, q=101):
     h = pow(d, m - 1, q)
     p = 0
     t = 0
+
+    for j in range(m):
+        p = (d * p + ord(pattern[j])) % q
+        t = (d * t + ord(text[j])) % q
+    for s in range (n - m  + 1) : 
+        if p == t:
+            if MATCHES(text, pattern, s):
+                matches.append(s)
+        if s < n - m :
+            t = (d * (t - (ord(text[s])) * h) + ord(text[s + m])) % q
+    return matches
 
     # TODO 2.2: build the initial hashes, verify hits, and roll to each next window
     raise NotImplementedError("Complete rabin_karp")
@@ -47,6 +71,14 @@ def compute_prefix_function(pattern):
     k = 0
 
     # TODO 3.2A: extend each border, following prefix links on a mismatch
+
+    for j in range (1, m):
+        while k > 0 and pattern[k] != pattern[j]:
+            k = pi[k - 1]
+        if pattern[k] == pattern[j]:
+            k = k + 1
+        pi[j] = k
+    return pi
     raise NotImplementedError("Complete compute_prefix_function")
 
     return pi
@@ -63,6 +95,15 @@ def kmp_search(text, pattern):
     matches = []
     pi = compute_prefix_function(pattern)
     q = 0
+    for i in range (n): 
+        while q > 0 and pattern[q] != text[i]:
+            q = pi[q - 1]
+        if pattern[q] == text[i]:
+            q = q + 1
+        if q == m:
+            matches.append(i - m + 1)
+            q = pi[m - 1]
+    return matches
 
     # TODO 3.2B: scan the text with prefix fallbacks and record all matches
     raise NotImplementedError("Complete kmp_search")
