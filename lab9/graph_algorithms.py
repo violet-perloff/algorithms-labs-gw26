@@ -19,7 +19,25 @@ def topological_sort(graph):
     queue = deque()
     order = []
 
+    for u in range(n):
+        for v in graph[u]:
+            indegree[v] = indegree[v] + 1
+    
+    for u in range(n):
+        if indegree[u] == 0:
+            queue.append(u)
+
     # TODO 1.2: count incoming edges, process ready vertices, and check for a cycle
+    while queue:
+        u = queue.popleft()
+        order.append(u)
+        for v in graph[u]:
+            indegree[v] = indegree[v] - 1
+            if indegree[v] == 0:
+                queue.append(v)
+    if len(order) != n:
+        return None
+    return order
     raise NotImplementedError("Complete topological_sort")
 
     return order
@@ -35,6 +53,9 @@ class DisjointSet:
     def find(self, x):
         """Return x's root and compress the path to it."""
         # TODO 2.1A: update each parent on the search path to the root
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
         raise NotImplementedError("Complete find")
 
     def union(self, x, y):
@@ -43,6 +64,19 @@ class DisjointSet:
         On equal ranks, attach root_y under root_x and increment rank[root_x].
         """
         # TODO 2.1B: find the roots and merge by rank
+        xroot = self.find(x)
+        yroot = self.find(y)
+        if xroot == yroot:
+            return False
+        if self.rank[xroot] < self.rank[yroot]:
+            self.parent[xroot] = yroot
+        elif self.rank[xroot] > self.rank[yroot]:
+            self.parent[yroot] = xroot
+        else:
+            self.parent[yroot] = xroot
+            self.rank[xroot] = self.rank[xroot] + 1
+        return True
+        
         raise NotImplementedError("Complete union")
 
 
@@ -59,6 +93,13 @@ def kruskal(n, edges):
     total = 0
 
     # TODO 2.1C: use union to accept edges and stop once a spanning tree is complete
+    for (u, v, weight) in sorted_edges:
+        if sets.union(u, v):
+            chosen.append((u,v,weight))
+            total += weight
+            if len(chosen) == n - 1:
+                break
+    return(chosen,total)
     raise NotImplementedError("Complete kruskal")
 
     return chosen, total
